@@ -1,0 +1,46 @@
+name: AI Banking PR Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  banking-audit-review:
+    name: Automated Banking Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate PR Review Summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const reviewerRole = "🛡️ Staff Banking Architect & Security Auditor";
+            
+            const commentBody = `### ${reviewerRole} - Análise Automática de PR
+            
+            Olá @${pr.user.login}! Este Pull Request foi registrado para a plataforma de **Remote Config & Dynamic Menus Bancários**.
+            
+            #### 🔍 Critérios de Auditoria Automática:
+            - **Integridade de Contratos:** Os schemas JSON devem preservar retrocompatibilidade (*backward compatibility*) para não quebrar versões legadas do app mobile.
+            - **Resiliência do Event Loop:** Operações de I/O, hashing ou compressão não devem bloquear a thread principal do Node.js.
+            - **Segurança Bancária:** Nenhuma chave privada (Ed25519) ou credencial de infraestrutura pode ser exposta no código.
+            - **Testes Obrigatórios:** Testes unitários com Vitest cobrindo casos felizes e de erro estrutural.
+            
+            > 💡 *Dica do Mentor:* Certifique-se de que o pipeline de CI (\`CI Pipeline\`) passou com 100% de sucesso nos testes antes do merge!`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: commentBody
+            });
