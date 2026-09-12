@@ -158,31 +158,57 @@ Exemplos:
 
 ---
 
-## 6. Pipeline de Compilação, Assinatura & Publicação
+## 6. Stack Tecnológico do Backend & Pipeline de Publicação
 
-O motor de publicação executa as seguintes etapas determinísticas:
+O backend atua exclusivamente como **Plano de Controle (Gestão e Publicação)**. Ele não recebe tráfego direto dos aplicativos móveis (absorvido pela CDN), o que torna o ecossistema **Node.js (LTS v22) + TypeScript** a escolha ideal por produtividade, tipagem estrita e APIs nativas em C++ de alta performance.
 
-1. **Validação Final de Esquema:** Revalidação do payload contra o schema JSON estrito.
-2. **Minificação & Pré-Compressão Offline:**
-   * Gera o arquivo `.json` minificado (sem espaços em branco ou quebras de linha).
-   * Gera os artefatos pré-comprimidos `.json.gz` (Gzip) e `.json.br` (**Brotli nível 11**).
-   * *Benefício:* Redução de até 80% do tamanho do tráfego de rede sem custo de CPU sob demanda na CDN.
-3. **Assinatura Digital com Chave Assimétrica (Ed25519):**
-   * A chave privada é mantida de forma segura em HSM / AWS KMS.
-   * O hash do payload minificado é assinado digitalmente.
-   * O envelope final é encapsulado:
-     ```json
-     {
-       "revision": 1043,
-       "timestamp": "2026-09-12T16:35:00Z",
-       "signature": "MC4CAQAwBQYDK2VwBCIEIP...==",
-       "data": { ... }
-     }
-     ```
-4. **Armazenamento e Invalidação:**
-   * Gravação no bucket de objetos (S3 / GCS) com versionamento ativado.
-   * Chamada à API de invalidação de *Cache-Tag* da CDN (`PURGE TAG: tenant-retail-navigation_menu`).
-   * Tempo total de propagação global: **< 2 segundos**.
+### 6.1. Componentes do Backend Node.js
+* **Framework Web:** **Fastify** — escolhido por ter `Ajv` integrado nativamente ao seu núcleo e oferecer throughput até 3x superior ao Express.
+* **Validação de Schemas:** `ajv` (Another JSON Schema Validator) + `ajv-formats` — compilação de schemas para funções JIT altamente otimizadas na engine V8.
+* **Banco de Dados Interno:** **PostgreSQL** com **Prisma** ou **Drizzle ORM** — garante propriedades ACID para rascunhos, histórico de aprovações (*Maker-Checker*) e trilha de auditoria imutável.
+* **Criptografia Assimétrica:** Módulo nativo `node:crypto` — suporte C++/OpenSSL de alto desempenho para assinatura e geração de chaves **Ed25519**.
+* **Compressão:** Módulo nativo `node:zlib` — suporte nativo ao algoritmo **Brotli** (`BROTLI_PARAM_QUALITY: 11`).
+* **Armazenamento de Objetos:** `@aws-sdk/client-s3` — upload para AWS S3, Cloudflare R2 ou MinIO.
+
+### 6.2. Pipeline Determinístico de Compilação & Publicação
+Assim que a proposta recebe a aprovação do segundo operador (*Checker*), o serviço em Node.js executa o seguinte fluxo síncrono em menos de 300ms:
+
+1. **Validação Estrita via Ajv:**
+   ```typescript
+   const isValid = ajvValidator(draftPayload);
+   if (!isValid) throw new SchemaValidationError(ajvValidator.errors);
+   ```
+2. **Minificação e Conversão para Buffer:**
+   ```typescript
+   const minifiedJson = JSON.stringify(draftPayload);
+   const payloadBuffer = Buffer.from(minifiedJson, 'utf-8');
+   ```
+3. **Assinatura Criptográfica Nativa (Ed25519):**
+   ```typescript
+   import crypto from 'node:crypto';
+   
+   const signature = crypto.sign(null, payloadBuffer, privateKeyPem).toString('base64');
+   const finalEnvelope = JSON.stringify({
+     revision: nextRevisionId,
+     timestamp: new Date().toISOString(),
+     signature,
+     data: draftPayload
+   });
+   ```
+4. **Pré-Compressão Brotli Máxima (Offline):**
+   ```typescript
+   import zlib from 'node:zlib';
+   
+   const brotliBuffer = zlib.brotliCompressSync(Buffer.from(finalEnvelope), {
+     params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 }
+   });
+   ```
+5. **Upload Concorrente para S3 / Object Storage:**
+   * Grava a revisão imutável: `/config/{namespace}/rev_{id}.json` e `.json.br`.
+   * Atualiza o ponteiro de produção: `/config/{namespace}/latest.json` e `.json.br`.
+6. **Invalidação Ativa na CDN (Purge API):**
+   * Emissão da chamada HTTP para a CDN purgar a tag: `tenant-retail-{namespace}`.
+   * Tempo total de propagação na borda: **< 2 segundos**.
 
 ---
 
