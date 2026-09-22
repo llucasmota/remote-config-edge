@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FeatureConfig",
+  "type": "object",
+  "required": [
+    "minVersion",
+    "enabled",
+    "path",
+    "userType"
+  ],
+  "properties": {
+    "minVersion": {
+      "type": "number",
+      "minimum": 1.0,
+      "description": "Sequential version of app config"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Attribute responsible to feature activate"
+    },
+    "path": {
+      "type": "string",
+      "description": "currently feature path"
+    },
+    "oldPath": {
+      "type": "string",
+      "description": "feature path older"
+    },
+    "userType": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "PF",
+          "PJ"
+        ]
+      },
+      "uniqueItems": true,
+      "description": "Type of users"
+    }
+  }
+}
