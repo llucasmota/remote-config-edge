@@ -1,6 +1,6 @@
 import { Ajv, type ValidateFunction } from 'ajv';
 import addFormats from 'ajv-formats';
-import featureSchema from '../schemas/feature-config.json' with { type: 'json' };
+import featureConfig from '../schemas/feature-config.json' with { type: 'json' };
 
 // 
 const ajv = new Ajv({ allErrors: true, strict: true });
@@ -10,7 +10,7 @@ addFormats.default(ajv);
 
 // 3. Schema compiler
 const validators = new Map<string, ValidateFunction>([
-  ['featureConfig', ajv.compile(featureSchema)]
+  ['featureConfig', ajv.compile(featureConfig)]
 ])
 
 export function validateConfig(namespace: string, data: unknown): { isValid: boolean, errors?: string[] } {

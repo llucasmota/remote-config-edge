@@ -5,11 +5,11 @@ import { validateConfig } from "./validator/validator.js";
  * High-performance edge-distributed configuration engine for mobile banking.
  */
 export const VERSION = '0.1.0';
-const featureSchema = {
+const featureConfig = {
   minVersion: 1.0,
   enabled: true,
   path: "/app-mobile",
   userType: ["PF"]
 }
 
-validateConfig("featureConfig", featureSchema)
+validateConfig("featureConfig", featureConfig)
