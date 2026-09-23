@@ -12,4 +12,4 @@ const featureSchema = {
   userType: ["PF"]
 }
 
-validateConfig("featureSchema", featureSchema)
+validateConfig("featureConfig", featureSchema)

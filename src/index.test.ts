@@ -5,7 +5,7 @@ import { validateConfig } from './validator/validator.js';
 
 
 const responseStringError = (field: string): string => {
-  return `field 'featureSchema': must have required property ${field}`
+  return `field 'featureConfig': must have required property ${field}`
 }
 
 
@@ -18,7 +18,7 @@ describe('Remote Config Edge Entrypoint', () => {
 describe('Remote config: Feature Schema', () => {
   describe('when payload is valid', () => {
     it('should validate successfully when valid feature config is provided', () => {
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: 1.0,
         enabled: true,
         path: '/app-mobile',
@@ -32,7 +32,7 @@ describe('Remote config: Feature Schema', () => {
     it('should pass validation when optional fields are present', () => {
       // TODO: Testar payload com 'oldPath' e múltiplos 'userType' (ex: ["PF", "PJ"])
 
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: 1.0,
         enabled: true,
         path: '/app-mobile',
@@ -48,7 +48,7 @@ describe('Remote config: Feature Schema', () => {
   describe('when payload is missing required fields', () => {
     it('should fail when "minVersion" is missing', () => {
       // TODO: Testar payload sem 'minVersion'
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         enabled: true,
         path: '/app-mobile',
         userType: ['PF', "PJ"],
@@ -59,13 +59,13 @@ describe('Remote config: Feature Schema', () => {
       expect(isValid).toBe(false);
       expect(errors).toBeInstanceOf(Array);
       expect(errors).toHaveLength(1);
-      expect(errors).toContain("field 'featureSchema': must have required property 'minVersion'");
+      expect(errors).toContain("field 'featureConfig': must have required property 'minVersion'");
 
     });
 
     it('should fail when "enabled" is missing', () => {
       // TODO: Testar payload sem 'enabled'
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: 1.0,
         path: '/app-mobile',
         userType: ['PF', "PJ"],
@@ -76,12 +76,12 @@ describe('Remote config: Feature Schema', () => {
       expect(isValid).toBe(false);
       expect(errors).toBeInstanceOf(Array);
       expect(errors).toHaveLength(1);
-      expect(errors).toContain("field 'featureSchema': must have required property 'enabled'");
+      expect(errors).toContain("field 'featureConfig': must have required property 'enabled'");
     });
 
     it('should fail when "path" is missing', () => {
       // TODO: Testar payload sem 'path'
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: 1.0,
         enabled: true,
         userType: ['PF', "PJ"],
@@ -92,12 +92,12 @@ describe('Remote config: Feature Schema', () => {
       expect(isValid).toBe(false);
       expect(errors).toBeInstanceOf(Array);
       expect(errors).toHaveLength(1);
-      expect(errors).toContain("field 'featureSchema': must have required property 'path'");
+      expect(errors).toContain("field 'featureConfig': must have required property 'path'");
     });
 
     it('should fail when "userType" is missing', () => {
       // TODO: Testar payload sem 'userType'
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: 1.0,
         enabled: true,
         path: '',
@@ -108,14 +108,14 @@ describe('Remote config: Feature Schema', () => {
       expect(isValid).toBe(false);
       expect(errors).toBeInstanceOf(Array);
       expect(errors).toHaveLength(1);
-      expect(errors).toContain("field 'featureSchema': must have required property 'userType'");
+      expect(errors).toContain("field 'featureConfig': must have required property 'userType'");
     });
   });
 
   describe('when payload has invalid types or constraints', () => {
     it('should fail when "minVersion" is lower than minimum allowed', () => {
       // TODO: Testar 'minVersion' com valor menor que 1.0 (ex: 0.5)
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: 0.5,
         enabled: true,
         path: '',
@@ -133,7 +133,7 @@ describe('Remote config: Feature Schema', () => {
 
     it('should fail when "userType" contains invalid enum values', () => {
       // TODO: Testar 'userType' com valor fora do enum (ex: ["ADMIN"])
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: 1.0,
         enabled: true,
         path: '',
@@ -151,7 +151,7 @@ describe('Remote config: Feature Schema', () => {
 
     it('should fail when "userType" contains duplicate items', () => {
       // TODO: Testar 'userType' violando uniqueItems (ex: ["PF", "PF"])
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: 1.0,
         enabled: true,
         path: '',
@@ -171,7 +171,7 @@ describe('Remote config: Feature Schema', () => {
     it('should fail when field types do not match the schema', () => {
       // TODO: Testar com tipos incompatíveis (ex: enabled como string ou minVersion como texto)
 
-      const { isValid, errors } = validateConfig('featureSchema', {
+      const { isValid, errors } = validateConfig('featureConfig', {
         minVersion: '1.0',
         enabled: 0,
         path: true,
