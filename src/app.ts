@@ -1,6 +1,4 @@
-import { timeStamp } from "console";
 import Fastify, { type FastifyInstance, } from "fastify";
-import { uptime } from "process";
 
 
 export function buildApp(): FastifyInstance {
