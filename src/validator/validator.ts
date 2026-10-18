@@ -17,7 +17,7 @@ export function validateConfig(namespace: string, data: unknown): { isValid: boo
   const validator = validators.get(namespace);
 
   if (!validator) {
-    console.log(`⚠️ Data is not a valid schema: namespace: ${namespace}`)
+
     return {
       isValid: false,
       errors: [`Unknown namespace: "${namespace}". Available Schemas: ${Array.from(validators.keys()).join(', ')}`]
@@ -27,7 +27,6 @@ export function validateConfig(namespace: string, data: unknown): { isValid: boo
   const isValid = validator(data);
 
   if (isValid) {
-    console.log(`✅ Schema sent is valid: namespace: ${namespace}`)
 
     return { isValid: true }
   }
@@ -37,7 +36,7 @@ export function validateConfig(namespace: string, data: unknown): { isValid: boo
     return `field '${field}': ${err.message}`;
   })
 
-  console.log(`❌ Schema hasn't approved in format validation: ${namespace}`)
+
 
   return {
     isValid: false,
