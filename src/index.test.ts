@@ -190,6 +190,19 @@ describe('Remote config: Feature Schema', () => {
 
 describe('when namespace is unknown', () => {
   it('should fail when an unregistered namespace is passed', () => {
-    // TODO: Testar chamada com namespace inexistente (ex: "unknownNamespace")
+
+    const { isValid, errors } = validateConfig('featureConfig', {
+      minVersion: 1.0,
+      enabled: true,
+      path: '/app-mobile',
+      userType: ['PF', "PJ"],
+      oldPath: "/dasdas",
+      unavailableType: "test"
+    });
+
+    console.log(`❌ when namespace is unknown - here is the error: ${errors?.toString()}`)
+
+    expect(isValid).toBe(false);
+    expect(errors).toContain("field 'featureConfig': must NOT have additional properties")
   });
 });
