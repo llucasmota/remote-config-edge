@@ -1,15 +1,16 @@
-import { validateConfig } from "./validator/validator.js";
+import { buildApp } from "./app.js";
 
-/**
- * Remote Config Edge Platform
- * High-performance edge-distributed configuration engine for mobile banking.
- */
-export const VERSION = '0.1.0';
-const featureConfig = {
-  minVersion: 1.0,
-  enabled: true,
-  path: "/app-mobile",
-  userType: ["PF"]
-}
+export const VERSION = '1.0.0';
 
-validateConfig("featureConfig", featureConfig)
+const app = buildApp();
+
+const PORT = Number(process.env.PORT) || 3000;
+
+
+app.listen({ port: PORT, host: '0.0.0.0' }, (err, address) => {
+  if (err) {
+    app.log.error(err);
+    process.exit(1);
+  }
+  app.log.info(`Server running on ${address}`);
+});
