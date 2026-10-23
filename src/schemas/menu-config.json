@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MenuCOnfig",
+  "type": "object",
+  "required": [
+    "minVersion",
+    "enabled",
+    "path",
+    "userType"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+      "description": "UUID identifier"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of Menu"
+    },
+    "minVersion": {
+      "type": "number",
+      "minimum": 1.0,
+      "description": "Sequential version of app config"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Attribute responsible to feature activate"
+    },
+    "path": {
+      "type": "string",
+      "description": "currently feature path",
+      "pattern": "bank://[a-z0-9_/]+$"
+    },
+    "userType": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "PF",
+          "PJ"
+        ]
+      },
+      "uniqueItems": true,
+      "description": "Type of users"
+    },
+    "icon": {
+      "type": "object",
+      "description": "Icon settings",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "path"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
