@@ -1,6 +1,7 @@
 import { Ajv, type ValidateFunction } from 'ajv';
 import addFormats from 'ajv-formats';
 import featureConfig from '../schemas/feature-config.json' with { type: 'json' };
+import menuConfig from '../schemas/menu-config.json' with { type: 'json' };
 
 // 
 const ajv = new Ajv({ allErrors: true, strict: true });
@@ -10,7 +11,7 @@ addFormats.default(ajv);
 
 // 3. Schema compiler
 const validators = new Map<string, ValidateFunction>([
-  ['featureConfig', ajv.compile(featureConfig)]
+  ['featureConfig', ajv.compile(featureConfig)], ['menuConfig', ajv.compile(menuConfig)],
 ])
 
 export function validateConfig(namespace: string, data: unknown): { isValid: boolean, errors?: string[] } {
@@ -33,6 +34,7 @@ export function validateConfig(namespace: string, data: unknown): { isValid: boo
 
   const formattedErrors = (validator.errors ?? []).map(err => {
     const field = err.instancePath ? err.instancePath : `${namespace}`;
+    console.log(`🤖 field '${field}': ${err.message}`)
     return `field '${field}': ${err.message}`;
   })
 
