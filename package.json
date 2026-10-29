@@ -8,7 +8,7 @@
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "test": "vitest run",
-    "test:watch": "vitest",
+    "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:coverage": "vitest run --coverage",
     "serve": "node src/app.ts"
   },
@@ -25,7 +25,8 @@
   "dependencies": {
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "fastify": "^5.12.4"
+    "fastify": "^5.12.4",
+    "uuid": "^14.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.20.2",
