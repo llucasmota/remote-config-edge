@@ -11,7 +11,7 @@ const responseStringError = (field: string): string => {
 
 describe('Remote Config Edge Entrypoint', () => {
   it('should export the initial version 0.1.0', () => {
-    expect(VERSION).toBe('0.1.0');
+    expect(VERSION).toBe('1.0.0');
   });
 });
 
@@ -206,3 +206,4 @@ describe('when namespace is unknown', () => {
     expect(errors).toContain("field 'featureConfig': must NOT have additional properties")
   });
 });
+
