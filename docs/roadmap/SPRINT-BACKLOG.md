@@ -6,26 +6,26 @@
 
 ---
 
-## 🏃 Sprint 0: Setup da Fundação & Validação com Ajv (EM ANDAMENTO)
+## 🏃 Sprint 0: Setup da Fundação & Validação com Ajv (✅ CONCLUÍDO)
 
 | Task ID | Descrição | Status | Branch | PR |
 | :--- | :--- | :--- | :--- | :--- |
 | **0.1** | Criação & Conexão do Repositório GitHub | ✅ Concluído | `main` | - |
-| **0.2** | Setup Base Node.js + TypeScript + Vitest + Fastify | ⏳ Em Andamento | `main` | - |
+| **0.2** | Setup Base Node.js + TypeScript + Vitest + Fastify | ✅ Concluído | `main` | - |
 | **0.3** | GitHub Actions (CI & Bot de Review de PR) | ✅ Concluído | `main` | - |
 | **0.4** | Template de Pull Request com Checklist de Governança | ✅ Concluído | `main` | - |
-| **0.5** | **[PRIMEIRA TAREFA DE CÓDIGO]** Schemas JSON & Validador Ajv com Testes | 📝 A Fazer | `feat/sprint-0-ajv-validation` | - |
+| **0.5** | **[PRIMEIRA TAREFA DE CÓDIGO]** Schemas JSON & Validador Ajv com Testes | ✅ Concluído | `feat/sprint-0-ajv-validation` | #2 |
 
 ---
 
-## 🏃 Sprint 1: Motor Criptográfico (Ed25519) & Compressão Brotli (PLANEJADO)
+## 🏃 Sprint 1: Motor Criptográfico (Ed25519) & Compressão Brotli (⏳ EM ANDAMENTO)
 
 | Task ID | Descrição | Status | Branch | PR |
 | :--- | :--- | :--- | :--- | :--- |
-| **1.1** | Gerenciador de Chaves Assimétricas Ed25519 com `node:crypto` | 📝 A Fazer | `feat/sprint-1-crypto` | - |
-| **1.2** | Função de Assinatura e Verificação de Integridade de Envelopes | 📝 A Fazer | `feat/sprint-1-crypto` | - |
-| **1.3** | Pipeline de Pré-Compressão Offline Brotli (Nível 11) com `node:zlib` | 📝 A Fazer | `feat/sprint-1-brotli` | - |
-| **1.4** | Testes Unitários de Criptografia e Benchmarks de Tamanho | 📝 A Fazer | `feat/sprint-1-brotli` | - |
+| **1.1** | Gerenciador de Chaves Assimétricas Ed25519 com `node:crypto` | ⏳ Em Andamento | `feat/sprint-1-crypto-brotli` | - |
+| **1.2** | Função de Assinatura e Verificação de Integridade de Envelopes | 📝 A Fazer | `feat/sprint-1-crypto-brotli` | - |
+| **1.3** | Pipeline de Pré-Compressão Offline Brotli (Nível 11) com `node:zlib` | 📝 A Fazer | `feat/sprint-1-crypto-brotli` | - |
+| **1.4** | Testes Unitários de Criptografia e Benchmarks de Tamanho | 📝 A Fazer | `feat/sprint-1-crypto-brotli` | - |
 
 ---
 
